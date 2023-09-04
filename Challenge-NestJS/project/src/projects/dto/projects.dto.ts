@@ -1,27 +1,27 @@
 import {
-    IsString,
-    IsNotEmpty,
-    IsDateString
-  } from 'class-validator';
+  IsString,
+  IsNotEmpty,
+  IsDateString
+} from 'class-validator';
 import { UserEntity } from 'src/users/entity/user.entity';
-  
-  
-  export class ProjectsDto {
-  
-    @IsNotEmpty()
-    @IsString()
-    name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    description: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @IsDateString()
-    createdDate: string;
+export class ProjectsDto {
 
-    @IsNotEmpty()
-    @IsString()
-    author: UserEntity;
-  }
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsDateString()
+  createdDate: string;
+
+  @IsNotEmpty()
+  @IsString()
+  author: UserEntity;
+}

@@ -4,15 +4,9 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './users/entity/user.entity';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { ProjectsController } from './projects/projects.controller';
-import { ProjectsService } from './projects/projects.service';
 import { ProjectsModule } from './projects/projects.module';
 import { ProjectsEntity } from './projects/entity/projects.entity';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
