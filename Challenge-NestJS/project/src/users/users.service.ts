@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersDto } from './dto/users.dto/users.dto';
 import { UserEntity } from './entity/user.entity';
+import { ProjectsEntity } from 'src/projects/entity/projects.entity';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +13,12 @@ export class UsersService {
   ) {}
 
   createUser(createUserDto: UsersDto): Promise<UserEntity> {
+    const findUser = this.findByUsername(createUserDto.username);
+    if (findUser) {
+      throw new Error('User already exists');
+    }
     const user = this.userRepository.create(createUserDto);
+    user.projects = [];
     return this.userRepository.save(user);
   }
 
@@ -21,26 +27,19 @@ export class UsersService {
   }
 
   findById(id: number): Promise<UserEntity | undefined> {
-    return this.userRepository.findOneBy({ id });
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async deleteById(id: number): Promise<UserEntity | null> {
-    // Find the user by username before deleting
     const userToDelete = await this.findById(id);
 
     if (!userToDelete) {
-      return null; // User not found
+      return null;
     }
 
-    // Delete the user
-    const deleteResult = await this.userRepository.delete(userToDelete);
+    const deleteResult = await this.userRepository.delete(id);
 
-    if (deleteResult.affected === 1) {
-      // If one row was affected (i.e., deleted), return the deleted user
-      return userToDelete;
-    } else {
-      return null; // Return null if the user was not deleted (e.g., not found)
-    }
+    return userToDelete;
   }
 
   findByUsername(username: string): Promise<UserEntity | null> {
@@ -51,5 +50,20 @@ export class UsersService {
     // Find the user by username before deleting
     const userToDelete = await this.findByUsername(username);
     return this.deleteById(userToDelete.id);
+  }
+
+  async addProject(
+    userId: number,
+    project: ProjectsEntity,
+  ): Promise<UserEntity> {
+    const actualUser = await this.findById(userId);
+
+    //If projects from user were not initialized, initialize it
+    if (!actualUser.projects) {
+      actualUser.projects = [];
+    }
+
+    actualUser.projects.push(project.id);
+    return this.userRepository.save(actualUser);
   }
 }

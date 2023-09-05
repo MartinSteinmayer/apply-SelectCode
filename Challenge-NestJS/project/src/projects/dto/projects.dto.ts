@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsDateString
 } from 'class-validator';
-import { UserEntity } from 'src/users/entity/user.entity';
 
 
 export class ProjectsDto {
@@ -20,8 +19,4 @@ export class ProjectsDto {
   @IsString()
   @IsDateString()
   createdDate: string;
-
-  @IsNotEmpty()
-  @IsString()
-  author: UserEntity;
 }

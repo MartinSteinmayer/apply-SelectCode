@@ -1,9 +1,9 @@
 import { UserEntity } from 'src/users/entity/user.entity';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany} from 'typeorm';
-import { TasksEntity } from '../tasks/tasks.entity';
+import { ProjectsEntity } from '../entity/projects.entity';
 
-@Entity('projects')
-export class ProjectsEntity {
+@Entity('tasks')
+export class TasksEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -17,9 +17,6 @@ export class ProjectsEntity {
     @Column({ length: 20 })
     createdDate: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.projects)
-    author: number;
-
-    @OneToMany(() => TasksEntity, (task: TasksEntity) => task.project)
-    tasks: number[];
+    @ManyToOne(() => ProjectsEntity, (project : ProjectsEntity) => project.tasks)
+    project: number;
 }

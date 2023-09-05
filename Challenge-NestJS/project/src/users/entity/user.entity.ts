@@ -14,5 +14,5 @@ export class UserEntity {
     password: string;
 
     @OneToMany(() => ProjectsEntity, (project: ProjectsEntity) => project.author)
-    projects: ProjectsEntity[];
+    projects: number[];
 }

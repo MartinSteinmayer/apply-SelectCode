@@ -23,8 +23,4 @@ export class UsersDto {
     one special character`,
   })
   password: string;
-
-  @IsNotEmpty()
-  @OneToMany(() => ProjectsDto, (project: ProjectsDto) => project.name)
-  projects: ProjectsDto[];
 }
