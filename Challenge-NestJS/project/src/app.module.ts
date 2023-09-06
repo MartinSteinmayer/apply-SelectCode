@@ -7,6 +7,7 @@ import { UserEntity } from './users/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ProjectsEntity } from './projects/entity/projects.entity';
+import { EventEmitterModule, EventEmitter2 } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProjectsEntity } from './projects/entity/projects.entity';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
   ],
   controllers: [AppController],

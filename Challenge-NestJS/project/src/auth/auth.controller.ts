@@ -8,9 +8,9 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from 'src/auth/local.auth.guard';
+import { LocalAuthGuard } from './local.auth.guard';
 import { AuthService } from './auth.service';
-import { UsersDto } from 'src/users/dto/users.dto/users.dto';
+import { UsersDto } from '../users/dto/users.dto/users.dto';
 import { AuthGuard } from './auth.guard';
 
 @Controller('auth')

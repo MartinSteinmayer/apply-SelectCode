@@ -3,13 +3,14 @@ import { ProjectsService } from './projects.service';
 import { ProjectsEntity } from './entity/projects.entity';
 import { Post, Body, Request } from '@nestjs/common';
 import { ProjectsDto } from './dto/projects.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { TasksEntity } from './tasks/tasks.entity';
 import { TasksDto } from './tasks/tasks.dto';
+import { EventsService } from '../events/events.service';
 
 @Controller('projects')
 export class ProjectsController {
-    constructor(private projectsService: ProjectsService) {}
+    constructor(private projectsService: ProjectsService, private eventsService : EventsService) {}
 
     @UseGuards(AuthGuard)
     @Get('/')
@@ -46,8 +47,10 @@ export class ProjectsController {
 
     @UseGuards(AuthGuard)
     @Post('/:project_id/tasks')
-    createTask(@Param('project_id') id: string, @Body() task : TasksDto): Promise<TasksEntity> {
-        return this.projectsService.createTask(id, task);
+    async createTask(@Param('project_id') id: string, @Body() task : TasksDto): Promise<TasksEntity> {
+        const createdTask = await this.projectsService.createTask(id, task);
+        this.eventsService.emitEvent('tasks.created', createdTask);
+        return createdTask;
     }
 
     @UseGuards(AuthGuard)
@@ -58,8 +61,10 @@ export class ProjectsController {
 
     @UseGuards(AuthGuard)
     @Delete('/:project_id/tasks/:task_id')
-    deleteTask(@Param('project_id') id: string, @Param('task_id') taskId: string): Promise<TasksEntity> {
-        return this.projectsService.deleteTask(id, taskId);
+    async deleteTask(@Param('project_id') id: string, @Param('task_id') taskId: string): Promise<TasksEntity> {
+        const deletedTask = await this.projectsService.deleteTask(id, taskId);
+        this.eventsService.emitEvent('tasks.deleted', deletedTask.id);
+        return deletedTask;
     }
 
     
