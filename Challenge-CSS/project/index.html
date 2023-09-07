@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/a5ad130eca.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles.css" />
+    <title>CSS Challenge</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-top">
+        <img src="https://via.placeholder.com/140x50" alt="logo" />
+        <img
+          src="https://via.placeholder.com/60x50"
+          alt="logo minimized"
+          class="hide"
+        />
+        <a class="active"
+          ><i class="fa-solid fa-house"></i
+          ><span class="menu-label">Dashboard</span></a
+        >
+        <a
+          ><i class="fa-solid fa-user-group"></i
+          ><span class="menu-label">Customers</span></a
+        >
+        <a
+          ><i class="fa-solid fa-wrench"></i
+          ><span class="menu-label">Settings</span></a
+        >
+      </div>
+      <div class="sidebar-bottom">
+        <button id="openSidebar-button" onclick="openSidebar()" class="hide">
+          <i class="fa-solid fa-angles-right"></i>
+        </button>
+        <button id="collapse-button" onclick="closeSidebar()">
+          <i class="fa-solid fa-angles-left"></i>Collapse
+        </button>
+      </div>
+    </div>
+
+    <section class="content">
+      <div class="nav-content">
+        
+        <div class="nav-left">
+          <div>
+            <img src="https://via.placeholder.com/50" alt="logo" class="hidden-logo"/>
+            <h2>Dashboard</h2>
+          </div>
+          <p>Projects: 42 | Customers: 10</p>
+        </div>
+        <div class="nav-right">
+          <a>
+            <i class="fa-solid fa-user"></i>
+          </a>
+        </div>
+      </div>
+
+      <div id="card-grid">
+        <div class="card">
+          <h3>Yakidoo</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Goku</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer B</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Naruto</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Luffy</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer D</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Sanji</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Rimuru</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer B</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Yugi</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Sasuke</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Itachi</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer D</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Jiraya</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Zoro</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer D</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Mihawk</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Obito</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer D</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Kakashi</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer 3</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Aizen</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer B</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Ichigo</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Vegeta</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Yakidoo</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Mob</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer B</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Minato</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer C</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Garp</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer D</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Whitebeard</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Trunks</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer A</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Cell</h3>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam,
+            ex? Aspernatur assumenda aut unde saepe at. Perferendis nesciunt
+            dolor et aut numquam? Vel libero recusandae rem nihil ad eius
+            molestias.
+          </p>
+          <div class="card-footer">
+            <div class="card-footer-left">
+              <i class="fa-solid fa-money-bills"></i>
+              <p>1.2345,67 €</p>
+            </div>
+            <div class="card-footer-right">
+              <i class="fa-regular fa-user"></i>
+              <p>Customer B</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <a class="active"><i class="fa-solid fa-house"></i></a>
+        <a><i class="fa-solid fa-user-group"></i></a>
+        <a><i class="fa-solid fa-wrench"></i></a>
+      </div>
+    </footer>
+
+    <script>
+      function openSidebar() {
+        document.querySelector(".sidebar").style.width = "250px";
+        document.getElementById("openSidebar-button").style.display = "none";
+        document.getElementById("collapse-button").style.display = "block";
+
+        const content = document.getElementsByClassName("content");
+        for (let i = 0; i < content.length; i++) {
+          if (window.innerWidth > 700) {
+            content[i].style.marginLeft = "250px";
+          } else {
+            content[i].style.marginLeft = "150px";
+          }
+        }
+
+        const menuLabels = document.getElementsByClassName("menu-label");
+        for (let i = 0; i < menuLabels.length; i++) {
+          menuLabels[i].style.display = "flex";
+        }
+      }
+
+      function closeSidebar() {
+        document.querySelector(".sidebar").style.width = "80px";
+        document.getElementById("openSidebar-button").style.display = "block";
+        document.getElementById("collapse-button").style.display = "none";
+
+        const content = document.getElementsByClassName("content");
+        for (let i = 0; i < content.length; i++) {
+          content[i].style.marginLeft = "80px";
+        }
+
+        const menuLabels = document.getElementsByClassName("menu-label");
+        for (let i = 0; i < menuLabels.length; i++) {
+          menuLabels[i].style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
