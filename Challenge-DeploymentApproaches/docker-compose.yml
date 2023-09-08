@@ -1,0 +1,27 @@
+
+version: "3.5"
+services:
+  db:
+    image: postgres
+    restart: always #restarts the container if it stops
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres
+    volumes: #Mounts a volume from the host machine (./pgdata) to store PostgreSQL data files.
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: . #Builds the Docker image for the application using the Dockerfile located in the current directory
+      dockerfile: Dockerfile #implement a Dockerfile
+    container_name: nest-docker-postgres
+    environment:
+      - PORT=${PORT}
+    ports:
+      - '3000:3000'
+    depends_on: #Depends on the db service to be running before starting the app service.
+      - db
+    volumes: #Mounts the ./src directory from the host into the container's /app/src directory
+      - ./src:/app/src
