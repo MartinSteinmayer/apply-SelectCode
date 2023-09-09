@@ -1,0 +1,41 @@
+version: "3.5"
+
+services:
+  server1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - deno_network
+    depends_on:
+      - redis
+    volumes:
+      - deno_logs:/logs
+
+  server2:
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    ports:
+      - "8001:8001"
+    networks:
+      - deno_network
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    networks:
+      - deno_network
+
+networks:
+  deno_network:
+    external: true
+
+volumes:
+  deno_logs:
+    external: true
