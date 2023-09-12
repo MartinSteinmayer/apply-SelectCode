@@ -42,8 +42,6 @@ def four_point_transform(image, pts):
      [image.shape[1] - 1, 0],
      [image.shape[1] - 1, image.shape[0] - 1],
      [0, image.shape[0] - 1]], dtype="float32")  # Change to float32
-    print(rectangle)
-    print(rectangle.shape)
 
     # Make sure the points are also float32
     pts = pts.astype("float32")
@@ -79,12 +77,6 @@ cv2.imshow("Contour", image)
 cv2.waitKey(0)
 
 ordered_rect = order_points(rect.reshape(4,2)).reshape(-1, 2)[:4]
-print(rect)
-print(rect.shape, rect.dtype)
-print(ordered_rect)
-
-print(ordered_rect.shape, ordered_rect.dtype)
-
 
 warped = four_point_transform(grayImage, ordered_rect)
 
