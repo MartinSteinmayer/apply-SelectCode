@@ -11,13 +11,15 @@ type Piece =
   | "black-knight"
   | null;
 
+  
 // Define the type for the Square component's props
 interface SquareProps {
   id: string;
-  color: "black" | "white";
+  color: "#769656" | "#ccccc9";
   piece: Piece;
   isActive: boolean;
   isPossibleMove: boolean;
+  isThreatened: boolean | null;
   onClick: () => void;
 }
 
@@ -26,6 +28,7 @@ export const Square: React.FC<SquareProps> = ({
   piece,
   isActive,
   isPossibleMove,
+  isThreatened,
   onClick,
 }) => {
   
@@ -33,11 +36,16 @@ export const Square: React.FC<SquareProps> = ({
   let styles: React.CSSProperties = {
     backgroundColor: color,
     border: isActive ? "2px solid blue" : "none",
+    zIndex: isActive ? 1 : 0,
   };
 
   // If the square represents a possible move, add a subtle highlight
   if (isPossibleMove) {
-    styles.backgroundColor = "yellow";
+    styles.border = "2px solid yellow";
+  }
+
+  if (isThreatened && !isActive) {
+    styles.border = "2px solid red";
   }
 
   // Function to determine the appropriate FontAwesome icon based on the piece type
@@ -58,7 +66,7 @@ export const Square: React.FC<SquareProps> = ({
 
   // Determine icon color based on piece type
   const getIconColor = (piece: Piece) => {
-    return piece && piece.startsWith("white") ? "grey" : "black";
+    return piece && piece.startsWith("white") ? "white" : "black";
   };
 
   return (
@@ -67,8 +75,12 @@ export const Square: React.FC<SquareProps> = ({
         <FontAwesomeIcon 
           icon={getIconForPiece(piece)} 
           color={getIconColor(piece)}
+          size="2x"
         />
       }
     </div>
   );
 };
+
+// Export the Piece type so that other components can use it
+export type {Piece};

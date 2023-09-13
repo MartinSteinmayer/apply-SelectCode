@@ -1,0 +1,15 @@
+.main {
+    background-color: #727272;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.main h1 {
+    font-size: 20px;
+}
+
+.flip-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
