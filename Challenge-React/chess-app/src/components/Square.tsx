@@ -72,10 +72,10 @@ export const Square: React.FC<SquareProps> = ({
   return (
     <div className="square" style={styles} onClick={onClick}>
       {piece && 
-        <FontAwesomeIcon 
+        <FontAwesomeIcon
+          className="piece" 
           icon={getIconForPiece(piece)} 
           color={getIconColor(piece)}
-          size="2x"
         />
       }
     </div>
