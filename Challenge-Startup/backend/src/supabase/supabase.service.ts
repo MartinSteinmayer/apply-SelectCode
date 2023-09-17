@@ -2,10 +2,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { Request } from 'express';
 import { REQUEST } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
-import { ExtractJwt } from 'passport-jwt';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SupabaseService {
@@ -21,22 +18,25 @@ export class SupabaseService {
       return this.clientInstance;
     }
 
+    const token = this.request?.headers?.authorization?.split(' ')[1] || null;
+
     this.clientInstance = createClient(
       this.configService.get('SUPABASE_API_URL'),
       this.configService.get('SUPABASE_ANON_KEY'),
       {
         auth: {
           persistSession: false,
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
         },
         global: {
           headers: {
-            Authorization: `Bearer ${ExtractJwt.fromAuthHeaderAsBearerToken()(
-              this.request,
-            )}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       },
     );
+
     return this.clientInstance;
   }
 }

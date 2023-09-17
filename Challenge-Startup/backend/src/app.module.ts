@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { SupabaseModule } from './supabase/supabase.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { APP_GUARD } from '@nestjs/core';
-import { SupabaseGuard } from './supabase/guard/supabase.guard';
+import { AuthModule } from './auth/auth.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   controllers: [AppController],
@@ -15,12 +15,10 @@ import { SupabaseGuard } from './supabase/guard/supabase.guard';
     }),
     PassportModule,
     SupabaseModule,
+    AuthModule,
+    ProjectsModule
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: SupabaseGuard,
-    },
     AppService,
   ],
 })

@@ -1,125 +1,235 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectsEntity } from './entity/projects.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { SupabaseService } from '../supabase/supabase.service';
 import { ProjectsDto } from './dto/projects.dto';
-import { UsersService } from '../users/users.service';
-import { TasksEntity } from './tasks/tasks.entity';
 import { TasksDto } from './tasks/tasks.dto';
+
+type Project = {
+    id: number;
+    name: string;
+    description: string;
+    owner_id: string;
+    created_at: Date;
+    updated_at: Date;
+};
 
 @Injectable()
 export class ProjectsService {
-  constructor(
-    @InjectRepository(ProjectsEntity)
-    private projectsRepository: Repository<ProjectsEntity>,
-    private readonly usersService: UsersService,
-    @InjectRepository(TasksEntity)
-    private tasksRepository: Repository<TasksEntity>,
-  ) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
-  findProjectsFromUser(userId: number): Promise<ProjectsEntity[]> {
-    return this.projectsRepository.find({ where: { author: userId } });
-  }
+  async createProject(createProjectDto: ProjectsDto, userId: string) {
+    const supabaseClient = await this.supabaseService.getClient();
 
-  findById(id: number): Promise<ProjectsEntity | undefined> {
-    return this.projectsRepository.findOneBy({ id });
-  }
+    const newProject = {
+      ...createProjectDto,
+      owner_id: userId,
+    };
 
-  async createProject(
-    project: ProjectsDto,
-    authorId: number,
-  ): Promise<ProjectsEntity> {
-    const newProject = this.projectsRepository.create(project);
+    const { error } = await supabaseClient
+      .from('projects')
+      .insert([newProject]);
 
-    newProject.author = authorId;
-
-    const savedProject = await this.projectsRepository.save(newProject);
-    this.usersService.addProject(authorId, savedProject);
-
-    return savedProject;
-  }
-
-  async updateProject(
-    id: string,
-    project: ProjectsDto,
-  ): Promise<ProjectsEntity> {
-    const projectToUpdate = await this.findById(Number(id));
-
-    if (!projectToUpdate) {
-      throw new Error('Project not found');
+    if (error) {
+      throw new Error(error.message);
     }
 
-    projectToUpdate.name = project.name;
-    projectToUpdate.description = project.description;
-    projectToUpdate.createdDate = project.createdDate;
-
-    const updatedProject = await this.projectsRepository.save(projectToUpdate);
-    return updatedProject;
+    return newProject;
   }
 
-  async deleteProject(id: string): Promise<ProjectsEntity> {
-    const projectToDelete = await this.findById(Number(id));
+  async findAll(userId: string) {
+    const supabaseClient = await this.supabaseService.getClient();
 
-    if (!projectToDelete) {
-      throw new Error('Project not found');
+    const { data, error } = await supabaseClient
+      .from('projects')
+      .select()
+      .eq('owner_id', userId);
+
+    if (error) {
+      throw new Error(error.message);
     }
 
-    const deletedProject = await this.projectsRepository.delete(id);
-    return projectToDelete;
+    return data;
   }
 
-  async findTasksFromProject(id: string): Promise<TasksEntity[]> {
-    return this.tasksRepository.find({ where: { project: Number(id) } });
-  }
+    async findOne(id: number) : Promise<Project>{
+        const supabaseClient = await this.supabaseService.getClient();
+    
+        const { data, error } = await supabaseClient
+        .from('projects')
+        .select('*')
+        .eq('id', id);
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data[0];
+    }
 
-    async createTask(id: string, task: TasksDto): Promise<TasksEntity> {
-        const project = await this.findById(Number(id));
+    async update(id: number, project: ProjectsDto) {
+        const supabaseClient = await this.supabaseService.getClient();
+
+        const newProject = {
+            ...project,
+            updated_at: new Date(),
+        };
+    
+        const { data, error } = await supabaseClient
+        .from('projects')
+        .update(newProject)
+        .eq('id', id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return newProject;
+    }
+
+    async remove(id: number) {
+        const supabaseClient = await this.supabaseService.getClient();
+
+        const project = await this.findOne(id);
+    
+        const { data, error } = await supabaseClient
+        .from('projects')
+        .delete()
+        .eq('id', id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return project;
+    }
+
+    async getTasks(id: number) {
+        const supabaseClient = await this.supabaseService.getClient();
+    
+        const { data, error } = await supabaseClient
+        .from('tasks')
+        .select()
+        .eq('project_id', id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data;
+    }
+
+    async createTask(project_id: number, task : TasksDto, userId: string) {
+        const supabaseClient = await this.supabaseService.getClient();
+
+        const project : Project = await this.findOne(project_id);
         if (!project) {
             throw new Error('Project not found');
         }
-        if (!project.tasks) {
-            project.tasks = [];
+        if (project.owner_id !== userId) {
+            throw new Error('You are not the owner of this project');
         }
-        const newTask = this.tasksRepository.create(task);
-        newTask.project = project.id;
-        const savedTask = await this.tasksRepository.save(newTask);
-        project.tasks.push(savedTask.id);
-        await this.projectsRepository.save(project);
-        return savedTask;
+    
+        const newTask = {
+            ...task,
+            project_id: project_id,
+        };
+    
+        const { error } = await supabaseClient
+        .from('tasks')
+        .insert([newTask])
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return newTask;
+    }
+
+    async getTask(project_id: number, task_id : number) {
+        const supabaseClient = await this.supabaseService.getClient();
+    
+        const { data, error } = await supabaseClient
+        .from('tasks')
+        .select()
+        .eq('project_id', project_id)
+        .eq('id', task_id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data[0];
+    }
+
+    async getTasksFromUser(project_id: number, userID : string ) {
+        const supabaseClient = await this.supabaseService.getClient();
+    
+        const { data, error } = await supabaseClient
+        .from('tasks')
+        .select()
+        .eq('project_id', project_id)
+        .eq('assigned_to', userID)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data;
     }
     
-    async updateTask(project_id: string, taskId: string, task: TasksDto): Promise<TasksEntity> {
-        const project = await this.findById(Number(project_id));
+
+
+    async updateTask(project_id: number, task_id : number,  task: TasksDto, userId: string) {
+        const supabaseClient = await this.supabaseService.getClient();
+
+        const project : Project = await this.findOne(project_id);
         if (!project) {
             throw new Error('Project not found');
         }
-
-        const taskToUpdate = await this.tasksRepository.findOne({ where: { id: Number(taskId) } });
-        if (!taskToUpdate) {
-            throw new Error('Task not found');
+        if (project.owner_id !== userId) {
+            throw new Error('You are not the owner of this project');
         }
 
-        taskToUpdate.name = task.name;
-        taskToUpdate.description = task.description;
-        taskToUpdate.createdDate = task.createdDate;
+        const newTask = {
+            ...task,
+            updated_at: new Date(),
+        };
+    
+        const { error } = await supabaseClient
+        .from('tasks')
+        .update(newTask)
+        .eq('id', task_id)
 
-        const updatedTask = await this.tasksRepository.save(taskToUpdate);
-        return updatedTask;
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return newTask;
     }
 
-    async deleteTask(project_id: string, taskId: string): Promise<TasksEntity> {
-        const project = await this.findById(Number(project_id));
+    async deleteTask(project_id: number, task_id : number, userId: string) {
+        const supabaseClient = await this.supabaseService.getClient();
+
+        const project : Project = await this.findOne(project_id);
         if (!project) {
             throw new Error('Project not found');
         }
-
-        const taskToDelete = await this.tasksRepository.findOne({ where: { id: Number(taskId) } });
-        if (!taskToDelete) {
-            throw new Error('Task not found');
+        if (project.owner_id !== userId) {
+            throw new Error('You are not the owner of this project');
         }
 
-        const deletedTask = await this.tasksRepository.delete(taskId);
-        return taskToDelete;
+        const task = await this.getTask(project_id, task_id);
+        const { error } = await supabaseClient
+        .from('tasks')
+        .delete()
+        .eq('id', task_id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return task;
     }
+
 
 }

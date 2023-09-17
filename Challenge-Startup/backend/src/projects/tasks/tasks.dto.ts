@@ -1,7 +1,7 @@
 import {
     IsString,
     IsNotEmpty,
-    IsDateString
+    IsEnum
   } from 'class-validator';
   
   
@@ -9,14 +9,17 @@ import {
   
     @IsNotEmpty()
     @IsString()
-    name: string;
+    title: string;
   
     @IsNotEmpty()
     @IsString()
     description: string;
-  
+
+    @IsNotEmpty()
+    @IsEnum(['todo', 'in_progress', 'done'])
+    status: string;
+
     @IsNotEmpty()
     @IsString()
-    @IsDateString()
-    createdDate: string;
+    assigned_to: string;
   }

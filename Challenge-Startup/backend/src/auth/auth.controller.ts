@@ -1,48 +1,58 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { LocalAuthGuard } from './local.auth.guard';
-import { AuthService } from './auth.service';
-import { UsersDto } from '../users/dto/users.dto/users.dto';
-import { AuthGuard } from './auth.guard';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { SupabaseService } from '../supabase/supabase.service';
+import { SignupDto, LoginDto } from './dto/auth.dto';
+import { Logger } from '@nestjs/common';
+import { SupabaseGuard } from '../supabase/guard/supabase.guard';
+
+
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  private readonly logger = new Logger(AuthController.name);
 
-  @UseGuards(LocalAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @Post('/')
-  signIn(@Body() signInDto: UsersDto) {
-    const result = this.authService.validateUser(
-      signInDto.username,
-      signInDto.password,
-    );
+  constructor(private readonly supabaseService: SupabaseService) {}
 
-
-    if (result) {
-      return {...result, msg: 'You are logged in'};
-    } else {
-      return { msg: 'Wrong username or password' };
+  @Post('signup')
+  async signup(@Body() signupDto: SignupDto) {
+    this.logger.log("signup");
+    console.log("as");
+    const supabaseClient = await this.supabaseService.getClient();
+    console.log("a");
+    const { email, password } = signupDto;
+    const { data, error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password,
+    });
+    
+    if (error) {
+      return { success: false, message: error.message };
     }
+    return { success: true, data };
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Request() req): any {
-    return { User: req.user, msg: 'Current user profile' };
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    const supabaseClient = await this.supabaseService.getClient();
+    const { email, password } = loginDto;
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true, data };
   }
 
-  @Get('/logout')
-  logout(@Request() req): any {
-    req.session.destroy();
-    return { msg: 'The user session has ended' };
+  @UseGuards(SupabaseGuard)
+  @Post('logout')
+  async logout() {
+    const supabaseClient = await this.supabaseService.getClient();
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true, message: 'Logged out successfully' };
   }
 }
