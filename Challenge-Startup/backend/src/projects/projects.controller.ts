@@ -56,7 +56,7 @@ export class ProjectsController {
 
     @UseGuards(SupabaseGuard)
     @Post('/:project_id/tasks')
-    async createTask(@Param('project_id') id, @Body() task, @Request() req) {
+    async createTask(@Param('project_id') id, @Body() task : TasksDto, @Request() req) {
         return this.projectsService.createTask(id, task, req.user.sub);
     }
 
@@ -73,9 +73,9 @@ export class ProjectsController {
     }
 
     @UseGuards(SupabaseGuard)
-    @Get('/:project_id/tasks/')
-    async getTasksFromUser(@Param('project_id') projectId, userID : string ) {
-        return this.projectsService.getTasksFromUser(projectId, userID);
+    @Get('/:project_id/tasks/:user_email')
+    async getTasksFromUser(@Param('project_id') projectId, @Param('user_email') userEmail : string ) {
+        return this.projectsService.getTasksFromUser(projectId, userEmail);
     }
 
 }

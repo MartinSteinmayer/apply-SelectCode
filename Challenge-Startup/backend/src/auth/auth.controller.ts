@@ -14,10 +14,7 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() signupDto: SignupDto) {
-    this.logger.log("signup");
-    console.log("as");
     const supabaseClient = await this.supabaseService.getClient();
-    console.log("a");
     const { email, password } = signupDto;
     const { data, error } = await supabaseClient.auth.signUp({
       email: email,
@@ -27,6 +24,10 @@ export class AuthController {
     if (error) {
       return { success: false, message: error.message };
     }
+
+    await supabaseClient.from('profiles').insert([{ id: data.user.id, email: email }]);
+
+    this.logger.log(`User ${email} signed up`);
     return { success: true, data };
   }
 

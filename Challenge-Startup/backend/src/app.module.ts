@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   controllers: [AppController],
@@ -16,10 +17,11 @@ import { ProjectsModule } from './projects/projects.module';
     PassportModule,
     SupabaseModule,
     AuthModule,
-    ProjectsModule
+    ProjectsModule,
+    MailModule
   ],
   providers: [
-    AppService,
+    AppService
   ],
 })
 export class AppModule {}

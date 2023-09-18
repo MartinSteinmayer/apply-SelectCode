@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
 import { ProjectsDto } from './dto/projects.dto';
 import { TasksDto } from './tasks/tasks.dto';
+import { MailService } from '../mail/mail.service';
 
 type Project = {
     id: number;
@@ -14,7 +15,7 @@ type Project = {
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService, private mailService : MailService) {}
 
   async createProject(createProjectDto: ProjectsDto, userId: string) {
     const supabaseClient = await this.supabaseService.getClient();
@@ -121,6 +122,11 @@ export class ProjectsService {
         const supabaseClient = await this.supabaseService.getClient();
 
         const project : Project = await this.findOne(project_id);
+
+        const userEmail = task.assigned_to;
+        const user = await supabaseClient.from('profiles').select().eq('email', userEmail);
+        task.assigned_to = user.data[0].id;
+
         if (!project) {
             throw new Error('Project not found');
         }
@@ -135,12 +141,14 @@ export class ProjectsService {
     
         const { error } = await supabaseClient
         .from('tasks')
-        .insert([newTask])
+        .insert([newTask]);
     
         if (error) {
         throw new Error(error.message);
         }
-    
+
+        await this.mailService.sendEmail(userEmail);
+
         return newTask;
     }
 
@@ -158,28 +166,12 @@ export class ProjectsService {
         }
     
         return data[0];
-    }
-
-    async getTasksFromUser(project_id: number, userID : string ) {
-        const supabaseClient = await this.supabaseService.getClient();
-    
-        const { data, error } = await supabaseClient
-        .from('tasks')
-        .select()
-        .eq('project_id', project_id)
-        .eq('assigned_to', userID)
-    
-        if (error) {
-        throw new Error(error.message);
-        }
-    
-        return data;
-    }
-    
-
+    }    
 
     async updateTask(project_id: number, task_id : number,  task: TasksDto, userId: string) {
         const supabaseClient = await this.supabaseService.getClient();
+        const user = await supabaseClient.from('profiles').select().eq('email', task.assigned_to);
+        task.assigned_to = user.data[0].id;
 
         const project : Project = await this.findOne(project_id);
         if (!project) {
@@ -231,5 +223,22 @@ export class ProjectsService {
         return task;
     }
 
+    async getTasksFromUser(project_id: number, userEmail : string ) {
+        const supabaseClient = await this.supabaseService.getClient();
+        const user = await supabaseClient.from('profiles').select().eq('email', userEmail);
+    
+        const { data, error } = await supabaseClient
+        .from('tasks')
+        .select()
+        .eq('project_id', project_id)
+        .eq('assigned_to', user.data[0].id)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data;
+    }
+    
 
 }
