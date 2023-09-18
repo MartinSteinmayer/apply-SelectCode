@@ -1,7 +1,8 @@
 import {
     IsString,
     IsNotEmpty,
-    IsEnum
+    IsEnum,
+    IsArray
   } from 'class-validator';
   
   
@@ -18,8 +19,4 @@ import {
     @IsNotEmpty()
     @IsEnum(['todo', 'in_progress', 'done'])
     status: string;
-
-    @IsNotEmpty()
-    @IsString()
-    assigned_to: string;
   }

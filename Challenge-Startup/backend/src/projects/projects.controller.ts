@@ -8,6 +8,7 @@ import {
   Put,
   Delete,
   Param,
+  Query
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectsDto } from './dto/projects.dto';
@@ -55,6 +56,12 @@ export class ProjectsController {
     }
 
     @UseGuards(SupabaseGuard)
+    @Get('/:project_id/tasks/:task_id')
+    async getTask(@Param('project_id') projectId, @Param('task_id') taskId) {
+        return this.projectsService.getTask(projectId, taskId);
+    }
+
+    @UseGuards(SupabaseGuard)
     @Post('/:project_id/tasks')
     async createTask(@Param('project_id') id, @Body() task : TasksDto, @Request() req) {
         return this.projectsService.createTask(id, task, req.user.sub);
@@ -73,9 +80,29 @@ export class ProjectsController {
     }
 
     @UseGuards(SupabaseGuard)
-    @Get('/:project_id/tasks/:user_email')
-    async getTasksFromUser(@Param('project_id') projectId, @Param('user_email') userEmail : string ) {
-        return this.projectsService.getTasksFromUser(projectId, userEmail);
+    @Post('/:project_id/tasks/:task_id/assign')
+    async assignTask(@Param('project_id') projectId, @Param('task_id') taskId, @Body() assignTaskDto : {user_email : string}, @Request() req) {
+        return this.projectsService.assignTask(projectId, taskId, assignTaskDto, req.user.sub);
     }
+
+    @UseGuards(SupabaseGuard)
+    @Post('/:project_id/tasks/:task_id/unassign')
+    async unassignTask(@Param('project_id') projectId, @Param('task_id') taskId, @Body() unassignTaskDto : {user_email : string}, @Request() req) {
+        return this.projectsService.unassignTask(projectId, taskId, unassignTaskDto, req.user.sub);
+    }
+
+
+    @UseGuards(SupabaseGuard)
+    @Get('/:project_id/tasks')
+    async getTasksFromUserAndProject(@Param('project_id') projectId, @Query("email") userEmail : string ) {
+        return this.projectsService.getTasksFromUserAndProject(projectId, userEmail);
+    }
+
+    @UseGuards(SupabaseGuard)
+    @Get('/tasks')
+    async getAllTasks(@Request() req) {
+        return this.projectsService.getTasksFromUser(req.user.sub);
+    }
+    
 
 }

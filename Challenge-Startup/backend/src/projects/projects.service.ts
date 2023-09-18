@@ -123,10 +123,6 @@ export class ProjectsService {
 
         const project : Project = await this.findOne(project_id);
 
-        const userEmail = task.assigned_to;
-        const user = await supabaseClient.from('profiles').select().eq('email', userEmail);
-        task.assigned_to = user.data[0].id;
-
         if (!project) {
             throw new Error('Project not found');
         }
@@ -147,10 +143,61 @@ export class ProjectsService {
         throw new Error(error.message);
         }
 
-        await this.mailService.sendEmail(userEmail);
-
         return newTask;
     }
+
+    async assignTask(project_id: number, task_id : number, assignTaskDto : {user_email : string}, userId: string) {
+        const supabaseClient = await this.supabaseService.getClient();
+        const user = await supabaseClient.from('profiles').select().eq('email', assignTaskDto.user_email);
+        const task = await this.getTask(project_id, task_id);
+
+        const project : Project = await this.findOne(project_id);
+        if (!project) {
+            throw new Error('Project not found');
+        }
+        if (project.owner_id !== userId) {
+            throw new Error('You are not the owner of this project');
+        }
+
+        const { error } = await supabaseClient
+        .from('task_assignments')
+        .insert([{task_id: task_id, user_id: user.data[0].id}]);
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+
+        await this.mailService.sendEmail(assignTaskDto.user_email);
+    
+        return task;
+    }
+
+    async unassignTask(project_id: number, task_id : number, assignTaskDto : {user_email : string}, userId: string) {
+        const supabaseClient = await this.supabaseService.getClient();
+        const user = await supabaseClient.from('profiles').select().eq('email', assignTaskDto.user_email);
+        const task = await this.getTask(project_id, task_id);
+
+        const project : Project = await this.findOne(project_id);
+        if (!project) {
+            throw new Error('Project not found');
+        }
+        if (project.owner_id !== userId) {
+            throw new Error('You are not the owner of this project');
+        }
+
+        const { error } = await supabaseClient
+        .from('task_assignments')
+        .delete()
+        .eq('task_id', task_id)
+        .eq('user_id', user.data[0].id);
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return task;
+    }
+
 
     async getTask(project_id: number, task_id : number) {
         const supabaseClient = await this.supabaseService.getClient();
@@ -164,14 +211,16 @@ export class ProjectsService {
         if (error) {
         throw new Error(error.message);
         }
+
+        if (data.length === 0) {
+            throw new Error('Task not found');
+        }
     
         return data[0];
     }    
 
     async updateTask(project_id: number, task_id : number,  task: TasksDto, userId: string) {
         const supabaseClient = await this.supabaseService.getClient();
-        const user = await supabaseClient.from('profiles').select().eq('email', task.assigned_to);
-        task.assigned_to = user.data[0].id;
 
         const project : Project = await this.findOne(project_id);
         if (!project) {
@@ -223,15 +272,35 @@ export class ProjectsService {
         return task;
     }
 
-    async getTasksFromUser(project_id: number, userEmail : string ) {
+    async getTasksFromUser(userID : string) {
+        const supabaseClient = await this.supabaseService.getClient();
+        const tasks = await supabaseClient.from("task_assignments").select().eq('user_id', userID);
+        const taskIds = tasks.data.map(task => task.task_id);
+    
+        const { data, error } = await supabaseClient
+        .from('tasks')
+        .select()
+        .filter('id', 'in', taskIds)
+    
+        if (error) {
+        throw new Error(error.message);
+        }
+    
+        return data;
+    }
+        
+
+    async getTasksFromUserAndProject(project_id: number, userEmail : string ) {
         const supabaseClient = await this.supabaseService.getClient();
         const user = await supabaseClient.from('profiles').select().eq('email', userEmail);
+        const tasks = await supabaseClient.from("task_assignments").select().eq('user_id', user.data[0].id);
+        const taskIds = tasks.data.map(task => task.task_id);
     
         const { data, error } = await supabaseClient
         .from('tasks')
         .select()
         .eq('project_id', project_id)
-        .eq('assigned_to', user.data[0].id)
+        .filter('id', 'in', taskIds)
     
         if (error) {
         throw new Error(error.message);
