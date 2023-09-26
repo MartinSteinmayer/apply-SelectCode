@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
 import { SignupDto, LoginDto } from './dto/auth.dto';
 import { Logger } from '@nestjs/common';
@@ -43,17 +43,32 @@ export class AuthController {
     if (error) {
       return { success: false, message: error.message };
     }
+    this.logger.log(`User ${email} logged in`);
     return { success: true, data };
   }
 
   @UseGuards(SupabaseGuard)
   @Post('logout')
-  async logout() {
+  async logout(@Request() req) {
     const supabaseClient = await this.supabaseService.getClient();
     const { error } = await supabaseClient.auth.signOut();
     if (error) {
       return { success: false, message: error.message };
     }
     return { success: true, message: 'Logged out successfully' };
+  }
+
+  @UseGuards(SupabaseGuard)
+  @Get("user")
+  async getUser(@Request() req) {
+    const supabaseClient = await this.supabaseService.getClient();
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select()
+      .eq('id', req.user.sub);
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true, data };
   }
 }

@@ -1,0 +1,16 @@
+.task-description {
+    width: 100%;
+    max-width: 300px;
+    font-size: 15px;
+}
+
+.grid-tasks {
+    width: 100%;
+    padding: 0 3vw;
+}
+
+@media screen and (max-width: 400px) {
+    .grid-tasks {
+        padding: 0;
+    }
+}

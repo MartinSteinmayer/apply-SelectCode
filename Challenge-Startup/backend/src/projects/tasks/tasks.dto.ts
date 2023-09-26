@@ -17,6 +17,6 @@ import {
     description: string;
 
     @IsNotEmpty()
-    @IsEnum(['todo', 'in_progress', 'done'])
+    @IsString()
     status: string;
   }

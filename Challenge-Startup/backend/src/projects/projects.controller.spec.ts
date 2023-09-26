@@ -29,6 +29,13 @@ describe('ProjectsController', () => {
     email: 'martin.j.steinmayer@gmail.com',
   };
 
+  const mockComment = {
+    comment: 'Comment 1',
+    created_at: new Date().toDateString(),
+    task_id: 1,
+    user_id: '16089aee-c895-40b6-bc07-40a95727df84',
+  };
+
   beforeEach(async () => {
     const mockProjectsService = {
       createProject: jest.fn().mockImplementation((dto, userId) => {
@@ -53,6 +60,8 @@ describe('ProjectsController', () => {
       deleteTask: jest.fn().mockResolvedValue(mockTask), // Mocked to return a mock task
       getTasksFromUser: jest.fn().mockResolvedValue([mockTask]), // Mocked to return an empty array
       getTasksFromUserAndProject: jest.fn().mockResolvedValue([mockTask]), // Mocked to return an empty array
+      createComment: jest.fn().mockResolvedValue(mockComment), // Mocked to return a mock task
+      getCommentsFromTask: jest.fn().mockResolvedValue([mockComment]), // Mocked to return an empty array
     };
 
     const mockSupabaseService = {
@@ -126,7 +135,7 @@ describe('ProjectsController', () => {
     });
 
     it('should get tasks from a project', async () => {
-        const result = await controller.getTasks(1);
+        const result = await controller.getTasksFromProject(1);
         expect(result).toEqual([mockTask]);
     });
 
@@ -166,18 +175,31 @@ describe('ProjectsController', () => {
     });
 
     it('should get a task', async () => {
-        const result = await controller.getTask(1, 1);
+        const result = await controller.getTask(1);
         expect(result).toEqual(mockTask);
     });
 
     it('should get tasks from a user', async () => {
-        const result = await controller.getAllTasks({ user: mockUser });
+        const result = await controller.getAllTasks({user: mockUser});
         expect(result).toEqual([mockTask]);
     });
 
     it('should get tasks from a user and a project', async () => {
         const result = await controller.getTasksFromUserAndProject(1, mockUser.email);
         expect(result).toEqual([mockTask]);
+    });
+
+    it("should add a comment to a task", async () => {
+        const mockCommentDto = {
+            comment: 'Comment 1',
+        };
+        const result = await controller.createComment(1, mockCommentDto, { user: mockUser });
+        expect(result).toEqual(mockComment);
+    });
+
+    it("should get comments from a task", async () => {
+        const result = await controller.getCommentsFromTask(1);
+        expect(result).toEqual([mockComment]);
     });
 
 });
