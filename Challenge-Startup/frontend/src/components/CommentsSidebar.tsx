@@ -23,6 +23,7 @@ export const CommentsSidebar: React.FC<CommentsSidebarProps> = ({
   taskId,
   onClose,
 }) => {
+  console.log("CommentSidebar:", taskId)
   const [comments, setComments] = useState<any[]>([]);
   const [commentText, setCommentText] = useState<string>("");
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export const CommentsSidebar: React.FC<CommentsSidebarProps> = ({
 
     console.log("Fetching comments...");
     fetchComments();
-  }, []);
+  }, [taskId]);
 
   const handleCommentSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,14 +65,14 @@ export const CommentsSidebar: React.FC<CommentsSidebarProps> = ({
 
 
   return (
-    <div className="fixed right-0 top-0 h-full w-1/3 bg-white p-4 overflow-y-auto border-l">
+    <div className="fixed right-0 top-0 h-full w-full max-w-sm bg-white p-4 overflow-y-auto border-l">
       <button onClick={onClose} className="absolute top-4 right-5 text-xl">
         <AiIcons.AiOutlineClose className="text-3xl" />
       </button>
       <h2 className="text-xl font-bold mb-4">{title}</h2>
       <p className="mb-6">{description}</p>
       {comments.map((comment) => (
-        <Comment key={comment.id} user={comment.user_id} date={comment.created_at} content={comment.comment} />
+        <Comment key={comment.id} userId={comment.user_id} date={comment.created_at} content={comment.comment} />
       ))}
       <form className="mt-6" onSubmit={handleCommentSubmit}>
       <div className="mb-4">

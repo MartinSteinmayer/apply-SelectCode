@@ -44,10 +44,10 @@ export const SignUp = () => {
     
     try {
       const response = await signup({ email, password });
-      if (response.status === 200) {
+      if (response.status >= 200 && response.status < 300) {
         // Handle successful login, e.g., redirect to dashboard or store token
         console.log('Registered in successfully');
-        navigate('/login');
+        navigate('/verify-email');
       } else {
         // Handle login error
         setError(response.data.message);

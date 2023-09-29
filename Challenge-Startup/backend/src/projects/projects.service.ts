@@ -140,11 +140,18 @@ export class ProjectsService {
 
     const { error } = await supabaseClient.from('tasks').insert([newTask]);
 
+    const { data } = await supabaseClient
+      .from('tasks')
+      .select()
+      .eq('title', task.title)
+      .gte('created_at', new Date().toISOString())
+      .single();
+
     if (error) {
       throw new Error(error.message);
     }
 
-    return newTask;
+    return data;
   }
 
   async assignTask(
@@ -154,10 +161,12 @@ export class ProjectsService {
     userId: string,
   ) {
     const supabaseClient = await this.supabaseService.getClient();
+
     const user = await supabaseClient
       .from('profiles')
       .select()
       .eq('email', assignTaskDto.user_email);
+
     const task = await this.getTask(task_id);
 
     const project: Project = await this.findOne(project_id);
@@ -176,7 +185,8 @@ export class ProjectsService {
       throw new Error(error.message);
     }
 
-    await this.mailService.sendEmail(assignTaskDto.user_email);
+    // Functioniert nicht mehr wegen sendgrid authentication
+    // await this.mailService.sendEmail(assignTaskDto.user_email);
 
     return task;
   }
@@ -293,10 +303,7 @@ export class ProjectsService {
     return task;
   }
 
-  async updateTaskStatus(
-    task_id: number,
-    status: string,
-  ) {
+  async updateTaskStatus(task_id: number, status: string) {
     const supabaseClient = await this.supabaseService.getClient();
 
     const { error } = await supabaseClient
@@ -317,6 +324,10 @@ export class ProjectsService {
       .from('task_assignments')
       .select()
       .eq('user_id', userID);
+
+    if (tasks.data.length === 0) {
+      return [];
+    }
     const taskIds = tasks.data.map((task) => task.task_id);
 
     if (!taskIds.length) {
@@ -340,11 +351,12 @@ export class ProjectsService {
     const user = await supabaseClient
       .from('profiles')
       .select()
-      .eq('email', userEmail);
+      .eq('email', userEmail)
+      .single();
     const tasks = await supabaseClient
       .from('task_assignments')
       .select()
-      .eq('user_id', user.data[0].id);
+      .eq('user_id', user.data.id);
     const taskIds = tasks.data.map((task) => task.task_id);
 
     const { data, error } = await supabaseClient
@@ -363,7 +375,7 @@ export class ProjectsService {
   async getUsersFromProject(project_id: number) {
     const supabaseClient = await this.supabaseService.getClient();
     const tasks = await this.getTasks(project_id);
-      
+
     const taskIds = tasks.map((task) => task.id);
     const taskAssignments = await supabaseClient
       .from('task_assignments')
@@ -431,7 +443,9 @@ export class ProjectsService {
       user_id: userId,
     };
 
-    const { error } = await supabaseClient.from('task_comments').insert([newComment]);
+    const { error } = await supabaseClient
+      .from('task_comments')
+      .insert([newComment]);
 
     if (error) {
       throw new Error(error.message);

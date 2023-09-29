@@ -4,17 +4,34 @@ import { CommentsSidebar } from "../components/CommentsSidebar";
 import "../components/Task.css";
 import * as api from "../api";
 import { useNavigate } from "react-router-dom";
+import { CollaboratorsSidebar } from "../components/CollaboratorsSidebar";
 
 export const Tasks = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [currentTask, setCurrentTask] = useState<taskType | null>(null);
+  const [openComments, setOpenComments] = useState<boolean>(false);
+  const [openCollaborators, setOpenCollaborators] = useState<boolean>(false);
+  const [commentsKey, setCommentsKey] = useState<number>(0);
   const navigate = useNavigate();
 
   const handleOpenComments = (task: any) => {
     setCurrentTask(task);
+    setCommentsKey((prevKey) => prevKey + 1);
+    setOpenComments(true);
   };
 
   const handleCloseComments = () => {
+    setCurrentTask(null);
+    setOpenComments(false);
+  };
+
+  const handleOpenCollaborators = (task: any) => {
+    setOpenCollaborators(true);
+    setCurrentTask(task);
+  };
+
+  const handleCloseCollaborators = () => {
+    setOpenCollaborators(false);
     setCurrentTask(null);
   };
 
@@ -57,16 +74,28 @@ export const Tasks = () => {
                 status={task.status}
                 key={task.id}
                 id={task.id}
+                assignedTo={true}
+                onOpenCollaborators={() => handleOpenCollaborators(task)}
               />
             ))}
         </div>
       </div>
-      {currentTask && (
+      {currentTask && openComments && (
         <CommentsSidebar
+          key={commentsKey}
           title={currentTask.title}
           description={currentTask.description}
           taskId={currentTask.id}
           onClose={handleCloseComments}
+        />
+      )}
+      {openCollaborators && (
+        <CollaboratorsSidebar
+          taskId={currentTask?.id}
+          onClose={handleCloseCollaborators}
+          isOpen={openCollaborators}
+          title={currentTask?.title as string}
+          showAddCollaborators={false}
         />
       )}
     </>

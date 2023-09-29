@@ -1,10 +1,12 @@
 import React from "react";
+import * as api from "../api";
 
 interface ModalAssignTaskProps {
   title: string;
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (taskName: string, userEmail: string) => void;
+  projectId: string;
 }
 
 export const ModalAssignTask: React.FC<ModalAssignTaskProps> = ({
@@ -12,16 +14,33 @@ export const ModalAssignTask: React.FC<ModalAssignTaskProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  projectId,
 }) => {
 
   const [taskName, setTaskName] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
   const [description, setDescription] = React.useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(taskName, userEmail);
-    onClose();
+    
+    try {
+      const taskResponse = await api.createTask(projectId, {
+        title: taskName,
+        description: description,
+        status: "Todo",
+      });
+      console.log("Task created:", taskResponse.data);
+      console.log("id:", taskResponse.data.id)
+
+      if (taskResponse.data) {
+        await api.assignTask(projectId, taskResponse.data.id, { user_email: userEmail });
+      }
+      onSubmit(taskName, userEmail);
+      onClose();
+    } catch (error) {
+      console.error("Error assigning task:", error);
+    }
   };
 
   if (!isOpen) return null;

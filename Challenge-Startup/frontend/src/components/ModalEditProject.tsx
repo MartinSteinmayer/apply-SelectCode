@@ -1,22 +1,46 @@
 import React from 'react';
+import { useState } from 'react';
+import * as api from '../api';
 
 interface ModalProps {
   title: string;
   isOpen: boolean;
   projectName: string;
   projectDescription: string;
+  projectId?: string;
+  create?: boolean;
   onClose: () => void;
   onSubmit: (name: string, description: string) => void;
 }
 
-export const ModalEditProject: React.FC<ModalProps> = ({ title, isOpen, onClose, onSubmit, projectName, projectDescription }) => {
-  const [name, setName] = React.useState<string>(projectName);
-  const [description, setDescription] = React.useState<string>(projectDescription);
+export const ModalEditProject: React.FC<ModalProps> = ({ title, isOpen, onClose, onSubmit, projectName, projectDescription, projectId, create }) => {
+  const [name, setName] = useState<string>(projectName);
+  const [description, setDescription] = useState<string>(projectDescription);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(name, description);
-    onClose();
+    
+    try {
+      if (create) {
+        const response = await api.createProject({
+          name: name,
+          description: description,
+        });
+        console.log("Project Updated:", response.data);
+        onSubmit(name, description);
+        onClose();
+        return;
+      }
+      const response = await api.updateProject(projectId as string, {
+        name: name,
+        description: description,
+      });
+      console.log("Project Updated:", response.data);
+      onSubmit(name, description);
+      onClose();
+    } catch (error) {
+      console.error("Error assigning task:", error);
+    }
   };
 
   if (!isOpen) return null;

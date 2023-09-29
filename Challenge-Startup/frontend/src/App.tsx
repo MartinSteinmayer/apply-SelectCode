@@ -9,6 +9,7 @@ import { Profile } from "./pages/Profile";
 import { ProjectPage } from "./pages/ProjectPage";
 import { Login } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
+import { VerifyEmail } from "./pages/VerifyEmail";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/' element={<Home/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/signup' element={<SignUp/>} />
+        <Route path='/verify-email' element={<VerifyEmail/>} />
         <Route path='/projects' element={<Projects/>} />
         <Route path='/tasks' element={<Tasks/>} />
         <Route path='/profile' element={<Profile/>} />

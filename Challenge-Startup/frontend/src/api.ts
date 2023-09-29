@@ -34,6 +34,14 @@ export const logout = (): Promise<AxiosResponse<any>> => {
     });
 }
 
+export const insertProfile = (data : any): Promise<AxiosResponse<any>> => api.post('/auth/insertProfile', data, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+});
+
+export const user = (): Promise<AxiosResponse<any>> => api.get('/auth/user', {
+    headers: { Authorization: `Bearer ${getToken()}` },
+});
+
 // Projects
 export const getProjects = (): Promise<AxiosResponse<any>> => api.get('/projects', {
     headers: { Authorization: `Bearer ${getToken()}` },
@@ -84,11 +92,11 @@ export const updateTaskStatus = (taskId: string, data: any): Promise<AxiosRespon
     headers: { Authorization: `Bearer ${getToken()}` },
 });
 
-export const assignTask = (projectId: string, taskId: string, data: any): Promise<AxiosResponse<any>> => api.put(`/projects/${projectId}/tasks/${taskId}/assign`, data, {
+export const assignTask = (projectId: string, taskId: string, data: any): Promise<AxiosResponse<any>> => api.post(`/projects/${projectId}/tasks/${taskId}/assign`, data, {
     headers: { Authorization: `Bearer ${getToken()}` },
 });
 
-export const unassignTask = (projectId: string, taskId: string): Promise<AxiosResponse<any>> => api.put(`/projects/${projectId}/tasks/${taskId}/unassign`, {
+export const unassignTask = (projectId: string, taskId: string): Promise<AxiosResponse<any>> => api.post(`/projects/${projectId}/tasks/${taskId}/unassign`, {
     headers: { Authorization: `Bearer ${getToken()}` },
 });
 
@@ -111,5 +119,11 @@ export const getCommentsFromTask = (taskId: string): Promise<AxiosResponse<any>>
 });
 
 export const createComment = (taskId: string, data: any): Promise<AxiosResponse<any>> => api.post(`/projects/tasks/${taskId}/comments`, data, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+});
+
+// Users
+
+export const getUser = (userId: string): Promise<AxiosResponse<any>> => api.get(`/users/${userId}`, {
     headers: { Authorization: `Bearer ${getToken()}` },
 });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Task.css";
 import * as api from "../api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type taskType = {
   title: string;
@@ -10,7 +10,9 @@ type taskType = {
   status: string;
   id: string;
   onOpenComments: () => void;
+  onOpenCollaborators: () => void;
   showProjectName?: boolean;
+  assignedTo?: boolean;
 };
 
 export const Task: React.FC<taskType> = ({
@@ -20,7 +22,9 @@ export const Task: React.FC<taskType> = ({
   status,
   showProjectName,
   id,
+  assignedTo,
   onOpenComments,
+  onOpenCollaborators,
 }) => {
   const [currentStatus, setStatus] = useState<string>(status);
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
@@ -113,7 +117,9 @@ export const Task: React.FC<taskType> = ({
             <h3 className="text-lg font-semibold">
               {title}{" "}
               {showProjectName && (
-                <span className="text-sm text-gray-500">({projectName})</span>
+                <Link to={`/projects/${project}`} className="text-sm text-gray-500 hover:text-red-800">
+                <span className="text-sm">({projectName})</span>
+                </Link>
               )}
             </h3>
             <p className="mb-2 task-description">{description}</p>
@@ -125,6 +131,7 @@ export const Task: React.FC<taskType> = ({
             >
               View Comments
             </button>
+            {assignedTo && (
             <button
               className="transition duration-300 hover:scale-105 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               onClick={() => {
@@ -134,6 +141,7 @@ export const Task: React.FC<taskType> = ({
             >
               Update Status
             </button>
+            )}
           </div>
         </div>
 
@@ -161,7 +169,7 @@ export const Task: React.FC<taskType> = ({
             {comments.length} comments
           </div>
           <div className="text-sm text-gray-500">
-            {collaborators?.length} collaborators
+            <a onClick={onOpenCollaborators} className="hover:text-red-800 hover:cursor-pointer">{collaborators?.length} collaborators</a>
           </div>
         </div>
       </div>

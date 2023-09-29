@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { login } from '../api.ts';
+import { login, insertProfile } from '../api.ts';
 import { useNavigate } from 'react-router-dom';
 
 function Copyright(props: any) {
@@ -44,7 +44,7 @@ export const Login = () => {
         const response = await login({ email, password });
         if (response.status >= 200 && response.status < 300) {
           // Handle successful login, e.g., redirect to dashboard or store token
-          console.log('Logged in successfully');
+          await insertProfile({id: response.data.data.user.id, email: response.data.data.user.email});
           navigate('/');
         } else {
           // Handle login error

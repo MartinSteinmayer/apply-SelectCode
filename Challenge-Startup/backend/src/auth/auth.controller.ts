@@ -16,19 +16,45 @@ export class AuthController {
   async signup(@Body() signupDto: SignupDto) {
     const supabaseClient = await this.supabaseService.getClient();
     const { email, password } = signupDto;
+
     const { data, error } = await supabaseClient.auth.signUp({
       email: email,
       password: password,
     });
-    
+
     if (error) {
+      console.log(error);
       return { success: false, message: error.message };
     }
 
-    await supabaseClient.from('profiles').insert([{ id: data.user.id, email: email }]);
-
     this.logger.log(`User ${email} signed up`);
     return { success: true, data };
+  }
+
+  @UseGuards(SupabaseGuard)
+  @Post('insertProfile')
+  async insertProfile(@Body() profileDto : {id: string, email: string}, @Request() req) {
+    console.log(req.headers);
+    console.log(profileDto.email);
+    console.log(profileDto.id);
+    const supabaseClient = await this.supabaseService.getClient();
+    const user = {
+      id: profileDto.id,
+      email: profileDto.email,
+    }
+
+    const registeredProfiles = await supabaseClient.from('profiles').select().eq('id', profileDto.id);
+
+    if (registeredProfiles.count > 0) {
+      return { success: false, message: 'Profile already exists' };
+    }
+
+    const { error } = await supabaseClient.from('profiles').insert([user]);
+    if (error) {
+      console.log(error);
+      return { success: false, message: error.message };
+    }
+    return { success: true, message: 'Profile created successfully' };
   }
 
   @Post('login')
@@ -39,7 +65,7 @@ export class AuthController {
       email,
       password,
     });
-    
+
     if (error) {
       return { success: false, message: error.message };
     }

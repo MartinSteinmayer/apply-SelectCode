@@ -1,14 +1,8 @@
 import {
     Controller,
-    Post,
-    Body,
     UseGuards,
-    Request,
     Get,
-    Put,
-    Delete,
     Param,
-    Query,
   } from '@nestjs/common';
 import { SupabaseGuard } from '../supabase/guard/supabase.guard';
 import { UsersService } from './users.service';

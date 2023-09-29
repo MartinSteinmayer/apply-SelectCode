@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
 import { MailModule } from './mail/mail.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   controllers: [AppController],
@@ -18,7 +19,8 @@ import { MailModule } from './mail/mail.module';
     SupabaseModule,
     AuthModule,
     ProjectsModule,
-    MailModule
+    MailModule,
+    UsersModule,
   ],
   providers: [
     AppService

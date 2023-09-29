@@ -8,6 +8,7 @@ import * as api from "../api";
 export const Projects = () => {
     const [projects, setProjects] = useState<any[]>([]);
     const [isModalEditProjectOpen, setModalEditProject] = useState<boolean>(false);
+    const [wasEdited, setWasEdited] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,17 +27,16 @@ export const Projects = () => {
         
 
         fetchProjects();
-    }, []);
+    }, [wasEdited, isModalEditProjectOpen]);
 
-    const onSubmit = async (name: string, description: string) => {
-        try {
-            const response = await api.createProject({name, description});
-            console.log("Project created:", response.data);
-            setProjects([...projects, response.data]);
-        } catch (error) {
-            console.error("Error creating project:", error);
-        }
-    };
+    const handleCreateProject = async (_name: string, _description: string) => {
+        setModalEditProject(false);
+    }
+
+    const handleEditProject = async () => {
+        console.log("Project edited");
+        setWasEdited(!wasEdited);
+    }
 
     return (
         <>
@@ -49,7 +49,8 @@ export const Projects = () => {
                 description={project.description}
                 isOwner={project.owner_id === localStorage.getItem("userId")}
                 id={project.id}
-                key={project.id}
+                key={project.id + 1}
+                onChange={handleEditProject}
                 />
             ))}
             </div>
@@ -63,9 +64,10 @@ export const Projects = () => {
         title="Create New Project"
         projectName=""
         projectDescription=""
+        create={true}
         isOpen={isModalEditProjectOpen}
         onClose={() => setModalEditProject(false)}
-        onSubmit={onSubmit}
+        onSubmit={handleCreateProject}
       />
         </>
     );
